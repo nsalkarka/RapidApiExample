@@ -1,0 +1,317 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Net
+@model List<HotelViewModel.Hotel>
+
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/HotelFindLayout.cshtml";
+}
+
+<!-- Home -->
+
+<div class="home">
+	<div class="home_background parallax-window" data-parallax="scroll" data-image-src="/travelix-master/images/about_background.jpg"></div>
+	<div class="home_content">
+		<div class="home_title">Bulunan Oteller </div>
+	</div>
+</div>
+
+
+@{
+	var request = HttpContextAccessor.HttpContext.Request;
+	var currentUrl = $"{request.Path}{request.QueryString}";
+
+	Dictionary<string, Microsoft.Extensions.Primitives.StringValues> queryParams = QueryHelpers.ParseQuery(request.QueryString.ToString());
+	
+	string destId = queryParams["destId"];
+	string destName = queryParams["destName"];
+	string arrivalDate = queryParams["arrivalDate"];
+	string departureDate = queryParams["departureDate"];
+
+	destName = WebUtility.UrlDecode(destName);
+
+	
+}
+<!-- Offers -->
+
+<div class="offers">
+
+	<!-- Search -->
+
+	<div class="search">
+		<div class="search_inner">
+
+			<!-- Search Contents -->
+
+			<div class="container fill_height no-padding">
+				<div class="row fill_height no-margin">
+					<div class="col fill_height no-padding">
+
+						<!-- Search Tabs -->
+
+						<div class="search_tabs_container">
+							<div class="search_tabs d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+								<div class="search_tab d-flex flex-row align-items-center justify-content-lg-center justify-content-start"><img src="/travelix-master/images/suitcase.png" alt=""><span>Otel Bul</span></div>
+
+							</div>
+						</div>
+
+						<!-- Search Panel -->
+						<div class="search_panel active">
+							<form action="/HotelFind/Index" method="post" id="search_form_1" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+								<div class="search_item">
+									<div>Şehir</div>
+									<input type="text" name="destName" class="destination search_input" placeholder="Gideceğiniz şehir yazınız.." required="required" value="@destName">
+								</div>
+								<div class="search_item">
+									<div>Giriş Tarihi</div>
+									<input type="text" name="arrivalDate" class="check_in search_input" placeholder="YYYY-MM-DD" value="@arrivalDate">
+								</div>
+								<div class="search_item">
+									<div>Çıkış Tarihi</div>
+									<input type="text" name="departureDate" class="check_out search_input" placeholder="YYYY-MM-DD" value="@departureDate">
+								</div>
+								@* ... diğer input alanları ... *@
+								<button class="button search_button">Uygun Otelleri Bul<span></span><span></span><span></span></button>
+							</form>
+						</div>
+					@* 	<div class="search_panel active">
+							<form action="/HotelFind/Index" method="post" id="search_form_1" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+								<div class="search_item">
+									<div>Şehir</div>
+									<input asp-for="destName" type="text" class="form-control" required="required" placeholder="Nereye gitmek istersin?" value="@destName">
+									<input type="text" class="destination search_input" placeholder="Gideceğiniz şehir yazınız.." required="required">
+								</div>
+								<div class="search_item">
+									<div>Giriş Tarihi</div>
+
+									<input type="text" class="check_in search_input" placeholder="YYYY-MM-DD" value="@arrivalDate">
+								</div>
+								<div class="search_item">
+									<div>Çıkış Tarihi</div>
+									<input type="text" class="check_out search_input" placeholder="YYYY-MM-DD" value="@departureDate">
+								</div>
+								<div class="search_item">
+									<div>Yetişkin Kişi Sayısı</div>
+									<select name="adults" id="adults_1" class="dropdown_item_select search_input">
+										<option>01</option>
+										<option>02</option>
+										<option>03</option>
+									</select>
+								</div>
+								<div class="search_item">
+									<div>Çocuk Sayısı</div>
+									<select name="children" id="children_1" class="dropdown_item_select search_input">
+										<option>0</option>
+										<option>02</option>
+										<option>03</option>
+									</select>
+								</div>
+								<div class="extras">
+									<ul class="search_extras clearfix">
+										<li class="search_extras_item">
+											<div class="clearfix">
+												<input type="checkbox" id="search_extras_1" class="search_extras_cb">
+												<label for="search_extras_1">Hayvan Dostu</label>
+											</div>
+										</li>
+										<li class="search_extras_item">
+											<div class="clearfix">
+												<input type="checkbox" id="search_extras_2" class="search_extras_cb">
+												<label for="search_extras_2">Otopark</label>
+											</div>
+										</li>
+										<li class="search_extras_item">
+											<div class="clearfix">
+												<input type="checkbox" id="search_extras_3" class="search_extras_cb">
+												<label for="search_extras_3">Kablosuz İnternet</label>
+											</div>
+										</li>
+										<li class="search_extras_item">
+											<div class="clearfix">
+												<input type="checkbox" id="search_extras_4" class="search_extras_cb">
+												<label for="search_extras_4">Otel Restoranı</label>
+											</div>
+										</li>
+										<li class="search_extras_item">
+											<div class="clearfix">
+												<input type="checkbox" id="search_extras_5" class="search_extras_cb">
+												<label for="search_extras_5">Vale hizmeti</label>
+											</div>
+										</li>
+										<li class="search_extras_item">
+											<div class="clearfix">
+												<input type="checkbox" id="search_extras_6" class="search_extras_cb">
+												<label for="search_extras_6">Sigara İçme Alanı</label>
+											</div>
+										</li>
+										<li class="search_extras_item">
+											<div class="clearfix">
+												<input type="checkbox" id="search_extras_7" class="search_extras_cb">
+												<label for="search_extras_7">Engellilere Uygun</label>
+											</div>
+										</li>
+										<li class="search_extras_item">
+											<div class="clearfix">
+												<input type="checkbox" id="search_extras_8" class="search_extras_cb">
+												<label for="search_extras_8">Havuz</label>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<div class="more_options">
+									<div class="more_options_trigger">
+										<a href="#">daha fazla özellik</a>
+									</div>
+									<ul class="more_options_list clearfix">
+										<li class="more_options_item">
+											<div class="clearfix">
+												<input type="checkbox" id="more_options_1" class="search_extras_cb">
+												<label for="more_options_1">Deniz Kenarı</label>
+											</div>
+										</li>
+										<li class="more_options_item">
+											<div class="clearfix">
+												<input type="checkbox" id="more_options_2" class="search_extras_cb">
+												<label for="more_options_2">Suit Oda</label>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<button class="button search_button">Uygun Otelleri Bul<span></span><span></span><span></span></button>
+							</form>
+						</div> *@
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Offers -->
+	
+	<div class="container">
+		 <div class="row">
+			<div class="col-lg-1 temp_col"></div>
+			 <div class="col-lg-11">
+
+				 <!-- Offers Sorting -->
+				<div class="offers_sorting_container">
+					<ul class="offers_sorting">
+						<li>
+							<span class="sorting_text">Fiyat</span>
+							<i class="fa fa-chevron-down"></i>
+							<ul>
+								<li class="sort_btn" data-isotope-option='{ "sortBy": "original-order" }' data-parent=".price_sorting"><span>show all</span></li>
+								<li class="sort_btn" data-isotope-option='{ "sortBy": "price" }' data-parent=".price_sorting"><span>ascending</span></li>
+							</ul>
+						</li>
+						<li>
+							<span class="sorting_text">location</span>
+							<i class="fa fa-chevron-down"></i>
+							<ul>
+								<li class="sort_btn" data-isotope-option='{ "sortBy": "original-order" }'><span>default</span></li>
+								<li class="sort_btn" data-isotope-option='{ "sortBy": "name" }'><span>alphabetical</span></li>
+							</ul>
+						</li>
+						<li>
+							<span class="sorting_text">Yıldız</span>
+							<i class="fa fa-chevron-down"></i>
+							<ul>
+								<li class="filter_btn" data-filter="*"><span>show all</span></li>
+								<li class="sort_btn" data-isotope-option='{ "sortBy": "stars" }'><span>ascending</span></li>
+								<li class="filter_btn" data-filter=".rating_3"><span>3</span></li>
+								<li class="filter_btn" data-filter=".rating_4"><span>4</span></li>
+								<li class="filter_btn" data-filter=".rating_5"><span>5</span></li>
+							</ul>
+						</li>
+						<li class="distance_item">
+							<span class="sorting_text">Şehre Uzaklık</span>
+							<i class="fa fa-chevron-down"></i>
+							<ul>
+								<li class="num_sorting_btn"><span>distance</span></li>
+								<li class="num_sorting_btn"><span>distance</span></li>
+								<li class="num_sorting_btn"><span>distance</span></li>
+							</ul>
+						</li>
+						<li>
+							<span class="sorting_text">Yorumlar</span>
+							<i class="fa fa-chevron-down"></i>
+							<ul>
+								<li class="num_sorting_btn"><span>review</span></li>
+								<li class="num_sorting_btn"><span>review</span></li>
+								<li class="num_sorting_btn"><span>review</span></li>
+							</ul>
+						</li>
+					</ul>
+				</div> 
+			</div>  
+	
+			<div class="col-lg-12">
+				<!-- Offers Grid -->
+
+				<div class="offers_grid">
+					
+					<!-- Offers Item -->
+					@foreach (var item in Model)
+					
+					{
+						
+						
+					<div class="offers_item rating_4">
+						<div class="row">
+							<div class="col-lg-1 temp_col"></div>
+							<div class="col-lg-3 col-1680-4">
+								<div class="offers_image_container">
+									<!-- Image by -->
+									<div class="offers_image_background" style="background-image:url(@item.property.photoUrls[0])"></div>
+										@{
+											var fiyat = Math.Truncate(item.property.priceBreakdown.grossPrice.value);
+										}
+
+										
+										<div class="offer_name"><a href="single_listing.html">@fiyat &nbsp;<span>@item.property.priceBreakdown.grossPrice.currency</span></a></div>
+								</div>
+							</div>
+							<div class="col-lg-8">
+								<div class="offers_content">
+										<div class="offers_price">@item.property.name</div>
+									<div class="rating_r rating_r_4 offers_rating" data-rating="4">
+										<i></i>
+										<i></i>
+										<i></i>
+										<i></i>
+										<i></i>
+									</div>
+									<p class="offers_text">@item.accessibilityLabel</p>
+									<div class="offers_icons">
+										<ul class="offers_icons_list">
+											<li class="offers_icons_item"><img src="images/post.png" alt=""></li>
+											<li class="offers_icons_item"><img src="images/compass.png" alt=""></li>
+											<li class="offers_icons_item"><img src="images/bicycle.png" alt=""></li>
+											<li class="offers_icons_item"><img src="images/sailboat.png" alt=""></li>
+										</ul>
+									</div>
+									<div class="button book_button"><a href="#">Detay<span></span><span></span><span></span></a></div>
+									<div class="offer_reviews">
+										<div class="offer_reviews_content">
+											<div class="offer_reviews_title">@item.property.reviewScoreWord</div>
+											<div class="offer_reviews_subtitle">@item.property.reviewCount</div>
+										</div>
+										<div class="offer_reviews_rating text-center">@item.property.reviewScore</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+						}
+					
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

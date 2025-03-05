@@ -1,8 +1,203 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model HotelFindViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/HomeLayout.cshtml";
+}
+<style>
+    .search_panel_content {
+        display: flex;
+        align-items: center;
+        gap: 0;
+    }
+
+        .search_panel_content .search_item {
+            flex-grow: 1;
+        }
+
+        .search_panel_content .search_input {
+            width: 100%;
+        }
+
+    #search_form_1 .search_item div[style="display: flex;"] {
+        display: flex; /* Flexbox kullanarak yan yana yerleştirme */
+    }
+
+        #search_form_1 .search_item div[style="display: flex;"] div {
+            margin-right: 50px; /* Seçiciler arasında 10px boşluk */
+        }
+
+    .home_slider_background {
+        background-size: cover !important;
+        background-position: center !important;
+    }
+
+    .tarih-secileri {
+        display: flex; /* Tarih alanlarını yan yana yerleştir */
+        gap: 10px; /* Tarih alanları arasında boşluk */
+    }
+
+    .tarih-alani {
+        flex: 1; /* Tarih alanlarının eşit genişlikte olmasını sağlar */
+    }
+</style>
+
+<div class="super_container">
+    <header class="header">
+        <nav class="main_nav">
+            <div class="container">
+                <div class="row">
+                    <div class="col main_nav_col d-flex flex-row align-items-center justify-content-start">
+                        <div class="logo_container">
+                            <div class="logo"><a href="#"><img src="~/travelix-master/images/logo.png" alt="">otelfind</a></div>
+                        </div>
+                        <div class="main_nav_container ml-auto">
+                            <ul class="main_nav_list">
+                                <li class="main_nav_item"><a href="#">Anasayfa</a></li>
+                                <li class="main_nav_item"><a href="about.html">Hakkımızda</a></li>
+
+                                <li class="main_nav_item"><a href="blog.html">Otel Bulucu</a></li>
+                                <li class="main_nav_item"><a href="contact.html">İletişim</a></li>
+                            </ul>
+                        </div>
+                        <div class="content_search ml-lg-0 ml-auto">
+                        </div>
+                        <form id="search_form" class="search_form bez_1">
+                            <input type="search" class="search_content_input bez_1">
+                        </form>
+                        <div class="hamburger">
+                            <i class="fa fa-bars trans_200"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="menu trans_500">
+    </div>
+
+    <div class="home">
+        <div class="home_slider_container">
+            <div class="owl-carousel owl-theme home_slider">
+                <div class="owl-item home_slider_item">
+
+                    <div class="home_slider_background" style="background-image:url(/travelix-master/images/antik.jpg)"></div>
+                    <div class="home_slider_content text-center">
+                        <div class="search_panel active">
+                            <div class="home_slider_content_inner" data-animation-in="flipInX" data-animation-out="animate-out fadeOut">
+                                <h1>Dünyayı</h1>
+                                <h1>Keşfet</h1>
+                                @* <form action="#" id="search_form_1" class="search_panel_content">
+                                    <div class="search_item">
+                                        <br />
+                                        <input type="text" class="form-control" required="required" placeholder="Nereye gitmek istersin?">
+                                        <br />
+                                        <div><button type="submit" class="btn btn-success" href="#">Bana bir otel bul</button></div>
+                                    </div>
+
+
+
+                                </form> *@
+
+                               @*  <form asp-controller="HotelFind" asp-action="DestFind" method="post" id="search_form_1" class="search_panel_content">
+                                    <div class="search_item">
+                                        <br />
+                                        <input asp-for="destName" type="text" class="form-control" required="required" placeholder="Nereye gitmek istersin?">
+                                        <br />
+                                        <div style="display: flex;">
+                                            <div style="margin-right: 30px;">
+                                                
+                                                <input asp-for="arrivalDate" type="date" class="form-control" required="required" id="arrivalDate" name="arrivalDate" placeholder="Gidiş Tarihi Seç">
+                                            </div>
+                                            <div>
+                                                
+                                                <input asp-for="departureDate" type="date" class="form-control" required="required" id="departureDate" name="departureDate" placeholder="Dönüş Tarihi Seç">
+                                            </div>
+                                            <div><button type="submit" class="btn btn-success">Bana bir otel bul</button></div>
+                                        </div>
+                                        <br />
+                                        
+                                    </div>
+                                </form> *@
+                                <form asp-controller="HotelFind" asp-action="DestFind" method="post" id="search_form_1" class="search_panel_content">
+                                    <div class="search_item">
+                                        <br />
+                                        <input asp-for="destName" type="text" class="form-control" required="required" placeholder="Nereye gitmek istersin?">
+                                        <br />
+                                        <div class="tarih-secileri">
+                                            <div class="tarih-alani">
+                                                <label for="arrivalDate">GİDİŞ TARİHİ:</label>
+                                                <input asp-for="arrivalDate" type="date" required="required" class="form-control" id="arrivalDate" name="arrivalDate">
+                                            </div>
+                                            <div class="tarih-alani">
+                                                <label for="departureDate">DÖNÜŞ TARİHİ:</label>
+                                                <input asp-for="departureDate" type="date" required="required" class="form-control" id="departureDate" name="departureDate">
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div>
+                                            <button type="submit" class="btn btn-success">Bana bir otel bul</button>
+                                        </div>
+                                    </div>
+                                </form>
+                               
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="owl-item home_slider_item">
+                    <div class="home_slider_background" style="background-image:url(/travelix-master/images/kapadokya.jpg)"></div>
+                    <div class="home_slider_content text-center">
+                        <div class="search_panel active">
+                            <div class="home_slider_content_inner" data-animation-in="flipInX" data-animation-out="animate-out fadeOut">
+                                <h1>En güzel</h1>
+                                <h1>Otellerde Kal</h1>
+                                <form action="#" id="search_form_1" class="search_panel_content">
+                                    <div class="search_item">
+                                        <br />
+                                        <input type="text" class="form-control" required="required" placeholder="Nereye gitmek istersin?">
+                                        <br />
+                                        <div><button type="submit" class="btn btn-success" href="#">Bana bir otel bul</button></div>
+                                    </div>
+
+
+
+                                </form>
+                                @*  <div>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <label>@item.dest_id</label>
+                                    }
+                                </div> *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 order-lg-1 order-2  ">
+                    <div class="copyright_content d-flex flex-row align-items-center">
+                        <div>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> Tüm hakları saklıdır | Bu tema <i class="fa fa-heart-o" aria-hidden="true"></i>  <a href="https://colorlib.com" target="_blank">Colorlib</a>'den ödünç alınmıştır
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
+
